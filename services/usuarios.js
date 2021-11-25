@@ -28,8 +28,8 @@ class Usuarios{
 
         return usuarioGuardado || {}
     }
-    async updateProduct(id,data){
-        const productoActualizado = await UsuarioModel.findupByIdAndUpdate(id,data)
+    async updateUser(id,data){
+        const productoActualizado = await UsuarioModel.findByIdAndUpdate(id,data)
 
         return productoActualizado || {}
     }

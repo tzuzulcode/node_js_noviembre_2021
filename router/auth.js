@@ -1,4 +1,5 @@
 const express = require("express")
+const { verifyTokenAdmin } = require("../middlewares/authValidation")
 
 const Auth = require("../services/auth")
 
@@ -27,6 +28,17 @@ function auth(app){
         //res.status(200).json()
         if(result.success){
             return res.status(201).json({nombre:result.usuario.nombre})
+        }
+        
+        return res.status(400).json(result)
+    })
+    router.put("/cambiar_rol/:id",verifyTokenAdmin, async (req,res)=>{
+        const {rol} = req.body
+        const {id} = req.params
+        const result = await authService.cambiarRol(id,rol)
+        //res.status(200).json()
+        if(result.success){
+            return res.status(200).json({nombre:result.usuario.nombre})
         }
         
         return res.status(400).json(result)

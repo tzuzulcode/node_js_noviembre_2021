@@ -24,6 +24,15 @@ class Auth{
 
         return {"message":"Credenciales incorrectas",success:false}
     }
+
+    async cambiarRol(id,rol){
+        const usuario = await this.usuarios.updateUser(id,{rol})
+        if(usuario){
+            return {"message":"Rol actualizado",success:true,usuario}
+        }
+
+        return {"message":"Ocurrio un error",success:false}
+    }
 }
 
 module.exports = Auth

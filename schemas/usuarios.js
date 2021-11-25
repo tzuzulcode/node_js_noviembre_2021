@@ -6,7 +6,8 @@ const usuariosSchema = new Schema(
     {
         nombre:String,
         correo:String,
-        contrasena:String
+        contrasena:String,
+        rol:String
     }
 )
 // const ropaSchema = new Schema(
