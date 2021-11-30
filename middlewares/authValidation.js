@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken")
-
-//const config = require("../config")
+const config = require("../config")
 
 const obtenerRol = (token,validacion,req,res,next)=>{
     if(!token){
@@ -8,7 +7,7 @@ const obtenerRol = (token,validacion,req,res,next)=>{
     }
 
     try{
-        const decodedToken = jwt.verify(token,"12345")
+        const decodedToken = jwt.verify(token,config.jwt_secret)
         const {rol} = decodedToken
 
         if(validacion==="regular"){

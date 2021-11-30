@@ -1,12 +1,26 @@
 const jwt = require("jsonwebtoken")
 const Usuarios = require("./usuarios")
+const config = require("../config")
+const bcrypt = require("bcrypt")
+
 class Auth{
     usuarios = new Usuarios()
+
+    //hash -> encrypt
+    async hashPassword(password){
+        const salt = await bcrypt.genSalt(10)
+        const hash = await bcrypt.hash(password,salt)
+
+        return hash
+    }
+
     async login(correo,contrasena){
         const usuario = await this.usuarios.getUser(correo)
         if(usuario){
-            if(contrasena===usuario.contrasena){
-                const token = jwt.sign({correo,rol:usuario.rol},"12345",{
+            const contrasenaCorrecta = await bcrypt.compare(contrasena,usuario.contrasena)
+            if(contrasenaCorrecta){
+                //UUID
+                const token = jwt.sign({correo,rol:usuario.rol},config.jwt_secret,{
                     expiresIn:"1d"
                 })
                 return {token,usuario,success:true}
@@ -15,7 +29,8 @@ class Auth{
 
         return {"message":"Credenciales incorrectas",success:false}
     }
-    async registro(correo,contrasena,nombre){
+    async registro(correo,contrasenaOriginal,nombre){
+        const contrasena = await this.hashPassword(contrasenaOriginal)
         const usuario = await this.usuarios.createUser({correo,contrasena,nombre})
         
         if(usuario){
