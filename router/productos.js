@@ -21,7 +21,8 @@ function productos(app){
     router.post("/",verifyToken,async (req,res)=>{
         const data = req.body
         const result = await productosService.createProduct(data)
-        res.status(201).json(result)
+        
+        res.status(result.success?201:400).json(result)
     })
     router.put("/:id",verifyToken,async (req,res)=>{
         const data = req.body
