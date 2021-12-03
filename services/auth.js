@@ -30,14 +30,18 @@ class Auth{
         return {"message":"Credenciales incorrectas",success:false}
     }
     async registro(correo,contrasenaOriginal,nombre){
-        const contrasena = await this.hashPassword(contrasenaOriginal)
-        const usuario = await this.usuarios.createUser({correo,contrasena,nombre})
-        
-        if(usuario){
-            return {"message":"Registro exitoso",success:true,usuario}
-        }
+        const validacion = await this.usuarios.validateUser({correo,contrasena:contrasenaOriginal,nombre})
 
-        return {"message":"Credenciales incorrectas",success:false}
+        if(validacion.success){
+            const contrasena = await this.hashPassword(contrasenaOriginal)
+            const usuario = await this.usuarios.createUser({...validacion.data,contrasena})
+
+            return usuario
+        }
+        
+        return {success:false,...validacion}
+        
+        
     }
 
     async cambiarRol(id,rol){

@@ -1,21 +1,9 @@
-const UsuarioModel = require("../schemas/usuarios")
+const {UsuarioModel,usuarioSchemaJoi} = require("../schemas/usuarios")
 
 //const productos = new UsuarioModel({name:"producto"})
 
 class Usuarios{
 
-    async getProducts(){
-        try{
-            const resultado = await UsuarioModel.find()
-            //const resultado = await productos.save()
-
-            //Pending Promise
-            return resultado || []
-        }catch(error){
-            console.log(error)
-        }
-        
-    }
 
     async getUser(correo){
         const usuario = await UsuarioModel.findOne({correo}).exec()
@@ -23,10 +11,27 @@ class Usuarios{
         return usuario
     }
 
+    async validateUser(data){
+        const validacion = usuarioSchemaJoi.validate(data)
+
+        if(validacion.error){
+            return {data:validacion.value,success:false,message:validacion.error.details[0].message}
+        }
+
+        const usuarioExiste = await this.getUser(data.correo)
+        if(usuarioExiste){
+            return {data:validacion.value,success:false,message:"El correo ya esta en uso"}
+        }
+        
+
+        return {data:validacion.value,success:true,message:"Datos validados correctamente"}
+    }
+
     async createUser(data){
+        
         const usuarioGuardado = await UsuarioModel.create(data)
 
-        return usuarioGuardado || {}
+        return {data:usuarioGuardado,success:true,message:"Usuario creado exitosamente"}
     }
     async updateUser(id,data){
         const productoActualizado = await UsuarioModel.findByIdAndUpdate(id,data)

@@ -26,11 +26,7 @@ function auth(app){
         const {correo,nombre,contrasena} = req.body
         const result = await authService.registro(correo,contrasena,nombre)
         //res.status(200).json()
-        if(result.success){
-            return res.status(201).json({nombre:result.usuario.nombre})
-        }
-        
-        return res.status(400).json(result)
+        return res.status(result.success?201:400).json(result)
     })
     router.put("/cambiar_rol/:id",verifyTokenAdmin, async (req,res)=>{
         const {rol} = req.body
