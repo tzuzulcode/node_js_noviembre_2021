@@ -8,7 +8,8 @@ const productoSchemaJoi = Joi.object({
     nombre: Joi.string().required().max(30).message("El nombre es requerido y menor a 30 caracteres"),
     precio: Joi.number().required().max(5000).message("El precio es requerido y menor a 5000"),
     descripcion: Joi.string().max(200),
-    img:Joi.string()
+    img:Joi.string(),
+    idUsuario:Joi.string()
 })
 
 const productosSchema = new Schema(
@@ -27,7 +28,8 @@ const productosSchema = new Schema(
             type:String,
             maxlength:200
         },
-        img:String
+        img:String,
+        idUsuario:String,
     }
 )
 // const ropaSchema = new Schema(

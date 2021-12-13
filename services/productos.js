@@ -24,6 +24,11 @@ class Productos{
 
         return producto || {}
     }
+    async getProductsByUser(idUsuario){
+        const producto = await ProductoModel.find({idUsuario})
+
+        return producto || {}
+    }
 
     async createProduct(data){
         const validacion = productoSchemaJoi.validate(data)
@@ -50,10 +55,15 @@ class Productos{
         return {data:validacion.value,success:false,message:error.errors["nombre"].properties.message}
         
     }
-    async updateProduct(id,data){
-        const productoActualizado = await ProductoModel.findupByIdAndUpdate(id,data)
+    async updateProduct(id,data,usuario){
+        const producto = await this.getProduct(id)
+        if(producto.idUsuario === usuario.id || usuario.rol ==="admin" ){
+            let productoActualizado = await ProductoModel.findByIdAndUpdate(id,data)
+            return {updated:true,producto:productoActualizado,message:"El producto se actualizó correctamente"}
+        }
+        
 
-        return productoActualizado || {}
+        return {updated:false,message:"Sin permisos para modificar el producto"}
     }
     async deleteProduct(id){
         const productoEliminado = await ProductoModel.findByIdAndDelete(id)

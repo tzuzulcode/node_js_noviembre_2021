@@ -1,10 +1,15 @@
 const express = require("express")
 const cookie = require("cookie-parser")
+const cors = require("cors")
+const passport = require("passport")
+const expresssession = require("express-session")
+
 const productos = require("./router/productos")
 const usuarios = require("./router/usuarios")
 const auth = require("./router/auth")
 //Destructuring
-const {connection} = require("./config/db")
+const {connection} = require("./config/db");
+const config = require("./config");
 const app = express()
 
 // {
@@ -13,15 +18,21 @@ const app = express()
 // }
 
 //Middleware
-app.use(express.json())
+app.use(cors({credentials:true,origin:["http://localhost:5500","http://127.0.0.1:5500"]}))
 app.use(cookie())
+app.use(express.json())
+app.use(expresssession({
+    secret:"Mi contraseña"
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 
 //Connection to DB
 connection()
 
 productos(app)
 usuarios(app)
-auth(app)
+auth(app,passport)
 
 //Codigos de error
 //400 - bad request -> sintaxis invalida
