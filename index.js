@@ -27,6 +27,8 @@ app.use(expresssession({
 app.use(passport.initialize())
 app.use(passport.session())
 
+//passport.authenticate()
+
 //Connection to DB
 connection()
 

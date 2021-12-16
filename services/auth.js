@@ -6,9 +6,12 @@ const bcrypt = require("bcrypt")
 
 class Auth{
     usuarios = new Usuarios()
-
+    
     constructor(passport){
         this.passport = passport
+
+        this.authUser.bind(this.registro)
+
         this.passport.use(new GoogleStrategy({
             clientID:config.google_client_id,
             clientSecret:config.google_client_secret,
@@ -20,15 +23,15 @@ class Auth{
         this.passport.deserializeUser(this.serializer)
     }
 
-    authUser(request,accessToken,refreshToken,profile,done){
+    async authUser(request,accessToken,refreshToken,profile,done){
         //console.log("Request",request)
-        console.log("AccesToken",accessToken)
-        console.log("RefreshToken",refreshToken)
-        console.log("Profile",profile)
-        console.log("Done",done)
+        //console.log("AccesToken",accessToken)
+        //console.log("RefreshToken",refreshToken)
+        //console.log("Profile",profile)
+        //console.log("Done",done)
+
+        return done(null,{profile,accessToken})
         
-    
-        return done(null,profile)
     }
     
     serializer(user,done){
@@ -41,11 +44,28 @@ class Auth{
         })
     }
 
-    googleCallback(){
-        return this.passport.authenticate("google",{
-            successRedirect:"/api/productos",
-            failureRedirect:"/api/productos"
+    googleCallback(req,res){
+        return new Promise((resolve,reject)=>{
+            console.log("haciendo promesa")
+            this.passport.authenticate("google",async (error,{profile})=>{
+                if(error){
+                    return reject({succes:false})
+                }
+                console.log(profile)
+                const {displayName,emails,provider} = profile
+                const correo = emails[0].value
+                const result = await this.registro(correo,"123456abc",displayName,provider)
+
+                const usuario = result.success?result.data:await this.usuarios.getUser(correo)
+                
+                const token = jwt.sign({correo,rol:usuario.rol,id:usuario.id},config.jwt_secret,{
+                    expiresIn:"1d"
+                })
+
+                return resolve({token,usuario,success:true})
+            })(req,res)
         })
+        
     }
     // serializeUser(user,done){
     //     done(null,user)
@@ -78,8 +98,8 @@ class Auth{
 
         return {"message":"Credenciales incorrectas",success:false}
     }
-    async registro(correo,contrasenaOriginal,nombre){
-        const validacion = await this.usuarios.validateUser({correo,contrasena:contrasenaOriginal,nombre})
+    async registro(correo,contrasenaOriginal,nombre,provider){
+        const validacion = await this.usuarios.validateUser({correo,contrasena:contrasenaOriginal,nombre,provider})
 
         if(validacion.success){
             const contrasena = await this.hashPassword(contrasenaOriginal)
