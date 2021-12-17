@@ -7,6 +7,7 @@ const expresssession = require("express-session")
 const productos = require("./router/productos")
 const usuarios = require("./router/usuarios")
 const auth = require("./router/auth")
+const email = require("./router/email")
 //Destructuring
 const {connection} = require("./config/db");
 const config = require("./config");
@@ -35,6 +36,7 @@ connection()
 productos(app)
 usuarios(app)
 auth(app,passport)
+email(app)
 
 //Codigos de error
 //400 - bad request -> sintaxis invalida
