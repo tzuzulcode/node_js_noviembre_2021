@@ -1,6 +1,7 @@
 const {ProductoModel,productoSchemaJoi} = require("../schemas/productos")
 
 const assert = require("assert")
+const { uploadFile } = require("../libs/s3")
 
 const productos = new ProductoModel({name:"producto"})
 
@@ -36,23 +37,27 @@ class Productos{
 
         if(!validacion.error){
             const productoGuardado = await ProductoModel.create(data)
+            console.log('Subiendo archivo...')
+            uploadFile('./libs/img.jpg','bosque.jpg')
+            console.log('Termino de subir...')
 
             return {data:productoGuardado,success:true,message:"Producto creado exitosamente"}
         }
+        
 
         return {data:validacion.value,success:false,message:validacion.error.details[0].message}
 
-        try{
+        // try{
             
-            const productoGuardado = await ProductoModel.create(data)
+        //     const productoGuardado = await ProductoModel.create(data)
 
-            return {data:productoGuardado,success:true,message:"Producto creado exitosamente"}
-        }catch(error){
-            //error.errors['nombre']
-            console.log("Error, al crear producto",error.errors["nombre"].properties.message)
-        }
+        //     return {data:productoGuardado,success:true,message:"Producto creado exitosamente"}
+        // }catch(error){
+        //     //error.errors['nombre']
+        //     console.log("Error, al crear producto",error.errors["nombre"].properties.message)
+        // }
 
-        return {data:validacion.value,success:false,message:error.errors["nombre"].properties.message}
+        // return {data:validacion.value,success:false,message:error.errors["nombre"].properties.message}
         
     }
     async updateProduct(id,data,usuario){

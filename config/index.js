@@ -12,6 +12,9 @@ const config = {
     email_secure:process.env.EMAIL_SECURE,
     email_user:process.env.EMAIL_USER,
     email_password:process.env.EMAIL_PASSWORD,
+    aws_access_key:process.env.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key:process.env.AWS_SECRET_ACCESS_KEY.GOOGLE_CLIENT_ID,
+    aws_bucket_name: process.env.AWS_BUCKET_NAME
 }
 
 module.exports = config
