@@ -31,14 +31,14 @@ class Productos{
         return producto || {}
     }
 
-    async createProduct(data){
+    async createProduct(data,img){
         const validacion = productoSchemaJoi.validate(data)
         //console.log(resultado.error.details[0].message)
 
         if(!validacion.error){
             const productoGuardado = await ProductoModel.create(data)
             console.log('Subiendo archivo...')
-            uploadFile('./libs/img.jpg','bosque.jpg')
+            uploadFile(img.buffer,img.originalname)
             console.log('Termino de subir...')
 
             return {data:productoGuardado,success:true,message:"Producto creado exitosamente"}

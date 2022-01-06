@@ -1,4 +1,5 @@
 const express = require("express")
+const upload = require("../libs/files")
 const {verifyToken,verifyTokenEditor,verifyTokenAdmin} = require("../middlewares/authValidation")
 
 const Productos = require("../services/productos")
@@ -24,11 +25,11 @@ function productos(app){
         const result = await productosService.getProduct(id)
         res.status(200).json(result)
     })
-    router.post("/",verifyToken,async (req,res)=>{
-        const data = req.body
+    router.post("/",verifyToken,upload.single("img"),async (req,res)=>{
         const {id} = req.usuario
-        const result = await productosService.createProduct({...data,idUsuario:id})
-        
+        const {file,body:data} = req
+
+        const result = await productosService.createProduct({...data,idUsuario:id},file)
         res.status(result.success?201:400).json(result)
     })
     router.put("/:id",verifyToken,async (req,res)=>{

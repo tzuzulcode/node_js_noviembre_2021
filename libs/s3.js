@@ -4,10 +4,7 @@ const config = require('../config')
 
 const s3 = new aws.S3()
 
-const uploadFile = (fileName,key) =>{
-    const fileContent = fs.readFileSync(fileName)
-
-    console.log(fileContent)
+const uploadFile = (fileContent,key) =>{
 
     s3.upload({
         Bucket:config.aws_bucket_name,
