@@ -4,13 +4,13 @@ const cors = require("cors")
 const passport = require("passport")
 const expresssession = require("express-session")
 
-const productos = require("./router/productos")
-const usuarios = require("./router/usuarios")
-const auth = require("./router/auth")
-const email = require("./router/email")
+const productos = require("./src/router/productos")
+const usuarios = require("./src/router/usuarios")
+const auth = require("./src/router/auth")
+const email = require("./src/router/email")
 //Destructuring
-const {connection} = require("./config/db");
-const config = require("./config");
+const {connection} = require("./src/config/db");
+const config = require("./src/config");
 const app = express()
 
 // {
@@ -37,7 +37,6 @@ productos(app)
 usuarios(app)
 auth(app,passport)
 email(app)
-
 //Codigos de error
 //400 - bad request -> sintaxis invalida
 //401 - Payment required -> desuso
