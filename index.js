@@ -19,7 +19,7 @@ const app = express()
 // }
 
 //Middleware
-app.use(cors({credentials:true,origin:["http://localhost:5500","http://127.0.0.1:5500"]}))
+app.use(cors({credentials:true,origin:["http://localhost:5500","http://127.0.0.1:5500","http://localhost:3000","http://127.0.0.1:3000"]}))
 app.use(cookie())
 app.use(express.json())
 app.use(expresssession({
@@ -54,8 +54,6 @@ email(app)
 
 const port = 4000
 const server = app.listen(port)
-
-console.log(port)
 
 process.on('unhandledRejection',(err,promise)=>{
     console.log('Error',err.message)

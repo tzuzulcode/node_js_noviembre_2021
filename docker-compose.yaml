@@ -3,7 +3,7 @@ services:
   server:
     build: .
     volumes:
-      - /src:/app
+      - ./src:/app/src
     command: npm run dev
     ports:
       - "4001:4000"

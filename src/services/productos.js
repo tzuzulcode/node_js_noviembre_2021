@@ -37,9 +37,7 @@ class Productos{
 
         if(!validacion.error){
             const productoGuardado = await ProductoModel.create(data)
-            console.log('Subiendo archivo...')
             uploadFile(img.buffer,img.originalname)
-            console.log('Termino de subir...')
 
             return {data:productoGuardado,success:true,message:"Producto creado exitosamente"}
         }

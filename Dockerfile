@@ -6,14 +6,15 @@ FROM node
 #RUN -> Correr comandos
 #CMD -> Comando iniciar
 
+WORKDIR /app
 COPY package*.json .
 RUN npm install
 
-WORKDIR /app
-COPY ./src .
+COPY ./src /app/src
+COPY ./index.js /app/
+COPY ./.env /app/
 ENV PORT 4000
 EXPOSE 4000
 
-WORKDIR /
 
 CMD ["npm","run","dev"]
