@@ -52,8 +52,7 @@ email(app)
 
 //Mongo Compass
 
-const port = 4000
-const server = app.listen(port)
+const server = app.listen(config.port)
 
 process.on('unhandledRejection',(err,promise)=>{
     console.log('Error',err.message)
